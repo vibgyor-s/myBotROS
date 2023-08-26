@@ -98,6 +98,7 @@
         </xacro:inertial_box>
     </link>
 
+    <!-- add gazebo tag for every visual tag -->
     <gazebo reference="chassis">
         <material>Gazebo/Orange</material>
     </gazebo>
@@ -194,6 +195,8 @@
 
     <gazebo reference="caster_wheel">
         <material>Gazebo/White</material>
+
+        <!-- gazebo friction coefficients -->
         <mu1 value="0.001"/>
         <mu2 value="0.001"/>
     </gazebo>
