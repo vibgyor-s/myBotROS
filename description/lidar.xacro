@@ -46,7 +46,8 @@
 
         <sensor name="laser" type="ray">
             <pose> 0 0 0 0 0 0 </pose>
-            <visualize>true</visualize>
+            <visualize>false</visualize>
+            <!-- DISABLE LIDAR VISUAL WHEN USING CAMERA -->
             <update_rate>10</update_rate>
             <ray>
                 <scan>

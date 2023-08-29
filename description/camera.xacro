@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <!-- sudo apt install ros-humble-image-transport-plugins -->
+    <!-- sudo apt install ros-humble-rqt-image-view -->
+    <!-- for compressed image transport,view -->
+
+
+    <!-- VERY SIMILAR TO LIDAR FILE, COPY PASTE the file -->
+
+    <joint name="camera_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="camera_link"/>
+        <origin xyz="0.276 0 0.181" rpy="0 0.18 0"/>
+    </joint>
+    <!-- 0.305, 0, 0.08  , NO ROTATION, as it currently uses ros coordinate system-->
+    <!-- change lidar to camera  -->
+    
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="0.010 0.03 0.03"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <visual>
+            <origin xyz="0 0 -0.05"/>
+            <geometry>
+                <cylinder radius="0.002" length="0.1"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+    <!-- removed inertial (fixed) and collision (small) component for camera -->
+
+
+    <!-- SPECIAL LINK TO CONVERT FROM ROS LINK TO CAMERA LINK -->
+    <joint name="camera_optical_joint" type="fixed">
+        <parent link="camera_link"/>
+        <child link="camera_link_optical"/>
+        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+
+    <!-- FOR LINK, REMOVE ALL ATTRIBUTES, JUST AN INVISIBLE JOINT -->
+    <link name="camera_link_optical"></link>
+
+
+
+    <!-- GAZEBO REFERENCE -->
+    <gazebo reference="camera_link">
+        <material>Gazebo/Black</material>
+
+
+        <!-- VISULISING CAMERA SENSOR INSIDE GAZEBO -->
+        <sensor name="camera" type="camera">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <camera>
+                <horizontal_fov>1.089</horizontal_fov>
+                <!-- HORI FOV IN RADIANS -->
+                <image>
+                    <format>R8G8B8</format>
+                    <width>640</width>
+                    <height>480</height>
+                </image>
+                <!-- MINIMUM AND MAX DIST(METER) CAMERA ABLE TO SEE -->
+                <clip>
+                    <near>0.05</near>
+                    <far>8.0</far>
+                </clip>
+            </camera>
+            <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+
+                <!-- FRAME OF CAMERA VISION IS IMPORTANT, notice frame, not link -->
+                <frame_name>camera_link_optical</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
